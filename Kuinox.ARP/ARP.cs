@@ -52,8 +52,8 @@ namespace Kuinox.ARP
             string headerLine = reader.ReadLine();
             string[] headerEntries = headerLine.Split( ' ' );
             IPAddress address = IPAddress.Parse( headerEntries[1] );
-            string maskHexNumber = headerEntries[3].Split( 'x' )[1];
-            byte mask = byte.Parse( maskHexNumber, NumberStyles.HexNumber );
+            string interfaceIdHexNumber = headerEntries[3].Split( 'x' )[1];
+            byte interfaceId = byte.Parse( interfaceIdHexNumber, NumberStyles.HexNumber );
             reader.ReadLine();//useless line.
             var entries = new List<InterfaceArpEntry>();
             while( true )
@@ -82,7 +82,7 @@ namespace Kuinox.ARP
                 InterfaceArpEntry entry = new InterfaceArpEntry( ipAddress, PhysicalAddress.Parse( physicalAddress ), isDynamic );
                 entries.Add( entry );
             }
-            return new ArpInterface( address, mask, entries );
+            return new ArpInterface( address, interfaceId, entries );
         }
     }
 
@@ -119,10 +119,10 @@ namespace Kuinox.ARP
     /// </summary>
     public class ArpInterface
     {
-        internal ArpInterface( IPAddress interfaceIPAddress, byte mask, ICollection<InterfaceArpEntry> arpEntries )
+        internal ArpInterface( IPAddress interfaceIPAddress, byte networkInterfaceID, ICollection<InterfaceArpEntry> arpEntries )
         {
             InterfaceIPAddress = interfaceIPAddress;
-            Mask = mask;
+            NetworkInterfaceID = networkInterfaceID;
             ArpEntries = arpEntries;
         }
 
@@ -134,7 +134,7 @@ namespace Kuinox.ARP
         /// <summary>
         /// Mask of the Interface.
         /// </summary>
-        public byte Mask { get; }
+        public byte NetworkInterfaceID { get; }
 
         /// <summary>
         /// Arp Entries of this interface.
